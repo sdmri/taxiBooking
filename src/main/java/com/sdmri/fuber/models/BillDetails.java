@@ -5,22 +5,22 @@ public class BillDetails {
 	private double amount;
 	private double distanceInKms;
 	private double durationInMinutes;
-	private Cab cab;
+	private BookingDetails bookingDetails;
 
 	public BillDetails(String invoiceId, double amount, double distanceInKms,
-			double durationInMinutes, Cab cab) {
+			double durationInMinutes, BookingDetails bookingDetails) {
 		this.invoiceId = invoiceId;
 		this.amount = amount;
 		this.distanceInKms = distanceInKms;
 		this.durationInMinutes = durationInMinutes;
-		this.cab = cab;
+		this.bookingDetails = bookingDetails;
 	}
 	
 	/**
-	 * @return the cab
+	 * @return the bookingDetails
 	 */
-	public Cab getCab() {
-		return cab;
+	public BookingDetails getBookingDetails() {
+		return bookingDetails;
 	}
 
 	/**
@@ -61,7 +61,8 @@ public class BillDetails {
 		long temp;
 		temp = Double.doubleToLongBits(amount);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
-		result = prime * result + ((cab == null) ? 0 : cab.hashCode());
+		result = prime * result
+				+ ((bookingDetails == null) ? 0 : bookingDetails.hashCode());
 		temp = Double.doubleToLongBits(distanceInKms);
 		result = prime * result + (int) (temp ^ (temp >>> 32));
 		temp = Double.doubleToLongBits(durationInMinutes);
@@ -86,10 +87,10 @@ public class BillDetails {
 		if (Double.doubleToLongBits(amount) != Double
 				.doubleToLongBits(other.amount))
 			return false;
-		if (cab == null) {
-			if (other.cab != null)
+		if (bookingDetails == null) {
+			if (other.bookingDetails != null)
 				return false;
-		} else if (!cab.equals(other.cab))
+		} else if (!bookingDetails.equals(other.bookingDetails))
 			return false;
 		if (Double.doubleToLongBits(distanceInKms) != Double
 				.doubleToLongBits(other.distanceInKms))
@@ -112,7 +113,7 @@ public class BillDetails {
 	public String toString() {
 		return "BillDetails [invoiceId=" + invoiceId + ", amount=" + amount
 				+ ", distanceInKms=" + distanceInKms + ", durationInMinutes="
-				+ durationInMinutes + ", cab=" + cab + "]";
+				+ durationInMinutes + ", bookingDetails=" + bookingDetails
+				+ "]";
 	}
-	
 }

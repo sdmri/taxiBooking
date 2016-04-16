@@ -1,5 +1,8 @@
 package com.sdmri.fuber.cab.services;
 
+import java.util.Collection;
+import java.util.Set;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +15,7 @@ import com.sdmri.fuber.exception.NoCabsAvailableException;
 import com.sdmri.fuber.models.BillDetails;
 import com.sdmri.fuber.models.BookingDetails;
 import com.sdmri.fuber.models.Cab;
+import com.sdmri.fuber.models.CabLocation;
 import com.sdmri.fuber.models.Coordinate;
 
 /**
@@ -61,9 +65,10 @@ public class CabBookingService {
 		} catch (BookingNotFoundException e) {
 			throw new InvalidInputToServiceException(ErrorMessages.INVALID_BOOKING_ID);
 		}
+		Cab cab = bill.getBookingDetails().getInitialCabLocation().getCab();
 		LOG.debug(String.format("Billing complete for booking %s. Adding cab %s back to available pool."
-				,bookingId, bill.getCab().getId()));
-		addAvailableCab(bill.getCab(), destCoordinate);
+				,bookingId, cab.getId()));
+		addAvailableCab(cab, destCoordinate);
 		return bill;
 	}
 	
@@ -82,5 +87,32 @@ public class CabBookingService {
 	 */
 	public void removeAllAvailableCabs(){
 		invMgmt.removeAllAvailableCabs();
+	}
+	
+	
+	/**
+	 * Needed for auditing
+	 * 
+	 * @return
+	 */
+	public Collection<BookingDetails> fetchAllBookings(){
+		return bookingMgmt.getAllBookingDetails();
+	}
+	
+	/**
+	 * Needed for auditing
+	 * 
+	 * @return
+	 */
+	public Collection<BillDetails> fetchAllBills(){
+		return bookingMgmt.getAllBillDetails();
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public Set<CabLocation> fetchAllAvailableCabs() {
+		return invMgmt.fetchAllAvailableCabs();
 	}
 }

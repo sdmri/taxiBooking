@@ -1,5 +1,6 @@
 package com.sdmri.fuber.cab.booking;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -37,10 +38,12 @@ public class BookingManagement {
 	
 	/**
 	 * A concurrent hashmap is threadsafe and provides locking on buckets in the map.
-	 * This is good enough as the access pattern of this map does not warrant locking
+	 * This is good enough as the access pattern of these map does not warrant locking
 	 * the entire map.
 	 */
 	private Map<String, BookingDetails> mapOfBookings = new ConcurrentHashMap<>();
+	
+	private Map<String, BillDetails> mapOfBillingDetails = new ConcurrentHashMap<>();
 	
 	/**
 	 * Generates a booking in the system for a cab assigned to a user
@@ -53,6 +56,7 @@ public class BookingManagement {
 	public BookingDetails bookACab(Cab cab, Coordinate coordinate)
 		throws NoCabsAvailableException{
 		String bookingId = generateBookingID();
+		// Notify the driver and block while the cab arrives before starting trip timer
 		BookingDetails bookingDetails = new BookingDetails(bookingId, System.currentTimeMillis(), 
 				new CabLocation(cab, coordinate));
 		mapOfBookings.put(bookingId, bookingDetails);
@@ -77,12 +81,15 @@ public class BookingManagement {
 			LOG.error("Could not find booking with Id");
 			throw new BookingNotFoundException();
 		}
+		bookingDetails.completeTrip();
 		double distanceInKms = utils.calculateDistance(bookingDetails.getInitialCabLocation().getCoordinate(), 
 				coordinate);
 		double durationInMins = utils.getTripDurationInMins(bookingDetails.getTripStartEpoch(), tripEndEpoch);
 		double totalTripCost = utils.calculateTripCost(distanceInKms, durationInMins);
-		return new BillDetails(generateBillingId(), totalTripCost, distanceInKms, durationInMins, 
-				bookingDetails.getInitialCabLocation().getCab());
+		BillDetails billDetails = new BillDetails(generateBillingId(), totalTripCost, distanceInKms, durationInMins, 
+				bookingDetails);
+		mapOfBillingDetails.put(billDetails.getInvoiceId(), billDetails);
+		return billDetails;
 	}
 	
 	// Generates a unique booking ID for each request
@@ -98,4 +105,13 @@ public class BookingManagement {
 	private synchronized String generateBillingId(){
 		return "CB-" + String.format("%015d", billingID++);
 	}
+	
+	public Collection<BookingDetails> getAllBookingDetails(){
+		return mapOfBookings.values();
+	}
+	
+	public Collection<BillDetails> getAllBillDetails(){
+		return mapOfBillingDetails.values();
+	}
+
 }

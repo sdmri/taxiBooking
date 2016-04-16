@@ -1,20 +1,38 @@
 package com.sdmri.fuber.models;
 
 
-public class Cab {
+/**
+ * Incoming Json Request for adding a cab
+ * 
+ * @author shiven.dimri
+ *
+ */
+public class CabRequest {
 	private String id;
 	private String licensePlate;
 	private boolean pink;
 
-	public Cab(CabRequest cabRequest) {
-		this.id = cabRequest.getId();
-		this.licensePlate = cabRequest.getLicensePlate();
-		this.pink = cabRequest.isPink();
+	public CabRequest(){
+	}
+	
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(String id) {
+		this.id = id;
 	}
 
-	public Cab(String id, String licensePlate, boolean pink) {
-		this.id = id;
+	/**
+	 * @param licensePlate the licensePlate to set
+	 */
+	public void setLicensePlate(String licensePlate) {
 		this.licensePlate = licensePlate;
+	}
+
+	/**
+	 * @param pink the pink to set
+	 */
+	public void setPink(boolean pink) {
 		this.pink = pink;
 	}
 
@@ -39,14 +57,6 @@ public class Cab {
 		return pink;
 	}
 	
-	public boolean isColorApplicable(boolean pinkRequested){
-		if(pinkRequested){
-			return pink;
-		}else{
-			return true;
-		}
-	}
-
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
 	 */
@@ -72,7 +82,7 @@ public class Cab {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Cab other = (Cab) obj;
+		CabRequest other = (CabRequest) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;

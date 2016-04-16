@@ -153,4 +153,19 @@ public class InventoryManagement {
 			writeLock.unlock();
 		}
 	}
+
+	/**
+	 * Returns set of all un-assigned cabs
+	 * @return
+	 */
+	public Set<CabLocation> fetchAllAvailableCabs() {
+		Set<CabLocation> avCabs = new HashSet<>(); 
+		readLock.lock();
+		try{
+			avCabs.addAll(availableCabs.values());
+		}finally{
+			readLock.unlock();
+		}
+		return avCabs;
+	}
 }

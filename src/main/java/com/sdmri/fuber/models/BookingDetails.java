@@ -4,6 +4,7 @@ public class BookingDetails {
 	private String id;
 	private long tripStartEpoch;
 	private CabLocation initialCabLocation;
+	private boolean tripComplete;
 
 	public BookingDetails(String id, long tripStartEpoch,
 			CabLocation initialCabLocation) {
@@ -11,6 +12,15 @@ public class BookingDetails {
 		this.tripStartEpoch = tripStartEpoch;
 		this.initialCabLocation = initialCabLocation;
 	}
+	
+	/**
+	 * @return the tripComplete
+	 */
+	public boolean isTripComplete() {
+		return tripComplete;
+	}
+
+
 
 	/**
 	 * @return the id
@@ -32,6 +42,10 @@ public class BookingDetails {
 	public CabLocation getInitialCabLocation() {
 		return initialCabLocation;
 	}
+	
+	public void completeTrip(){
+		tripComplete = true;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#hashCode()
@@ -45,6 +59,7 @@ public class BookingDetails {
 				* result
 				+ ((initialCabLocation == null) ? 0 : initialCabLocation
 						.hashCode());
+		result = prime * result + (tripComplete ? 1231 : 1237);
 		result = prime * result
 				+ (int) (tripStartEpoch ^ (tripStartEpoch >>> 32));
 		return result;
@@ -72,6 +87,8 @@ public class BookingDetails {
 				return false;
 		} else if (!initialCabLocation.equals(other.initialCabLocation))
 			return false;
+		if (tripComplete != other.tripComplete)
+			return false;
 		if (tripStartEpoch != other.tripStartEpoch)
 			return false;
 		return true;
@@ -84,9 +101,6 @@ public class BookingDetails {
 	public String toString() {
 		return "BookingDetails [id=" + id + ", tripStartEpoch="
 				+ tripStartEpoch + ", initialCabLocation=" + initialCabLocation
-				+ "]";
+				+ ", tripComplete=" + tripComplete + "]";
 	}
-	
-	
-	
 }

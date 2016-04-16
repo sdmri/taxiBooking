@@ -1,5 +1,9 @@
 package com.sdmri.fuber.rest;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,6 +23,7 @@ import com.sdmri.fuber.exception.NoCabsAvailableException;
 import com.sdmri.fuber.models.BillDetails;
 import com.sdmri.fuber.models.BookingDetails;
 import com.sdmri.fuber.models.Cab;
+import com.sdmri.fuber.models.CabRequest;
 import com.sdmri.fuber.models.Coordinate;
 
 @Component
@@ -37,6 +42,7 @@ public class CabServiceRestEndpoints {
 	 */
 	@GET
 	@Path("/cab/assign/{latitude}/{longitude}")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response findCab(
 			@PathParam("latitude") String latitude,
 			@PathParam("longitude") String longitude,
@@ -44,7 +50,10 @@ public class CabServiceRestEndpoints {
 		BookingDetails bookingDetails = cabBookingService.assignCab(getCoordinate(latitude,longitude)
 				, pinkRequested);
 		LOG.debug("Assigned a cab with id " + bookingDetails.getId());
-		return Response.status(200).entity("{\"id\" : \"" +bookingDetails.getId() + "\"").type(MediaType.APPLICATION_JSON).build();
+		Map<String,String> response = new HashMap<>();
+		response.put("bookingId", bookingDetails.getId());
+		return Response.status(200).entity(response)
+				.type(MediaType.APPLICATION_JSON).build();
 	}
 	
 	/*
@@ -52,7 +61,7 @@ public class CabServiceRestEndpoints {
 	 */
 	@GET
 	@Path("/trip/end/{bookingId}/{latitude}/{longitude}")
-	@Produces("application/json")
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response endTrip(
 			@PathParam("bookingId") String bookingId,
 			@PathParam("latitude") String latitude,
@@ -92,10 +101,39 @@ public class CabServiceRestEndpoints {
 	
 	@POST
 	@Path("/cab/add/{latitude}/{longitude}")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response addNewCab(@PathParam("latitude") String latitude,
-			@PathParam("longitude") String longitude, Cab cab) throws InvalidInputToServiceException {
-		cabBookingService.addAvailableCab(cab, getCoordinate(latitude,longitude));
-		return Response.status(200).entity("{\"status\":\"Added\"}").build();
+			@PathParam("longitude") String longitude, CabRequest cabRequest) throws InvalidInputToServiceException {
+		cabBookingService.addAvailableCab(new Cab(cabRequest), getCoordinate(latitude,longitude));
+		Map<String,String> response = new HashMap<>();
+		response.put("status", "Added");
+		return Response.status(200).entity(response).
+				type(MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
+	@Path("/bookings")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response fetchAllBookings(){
+		return Response.status(200).entity(cabBookingService.fetchAllBookings())
+				.type(MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
+	@Path("/bookings/bills")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response fetchAllBills(){
+		return Response.status(200).entity(cabBookingService.fetchAllBills())
+				.type(MediaType.APPLICATION_JSON).build();
+	}
+	
+	@GET
+	@Path("/cab/available")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response fetchAllAvailableCabs(){
+		return Response.status(200).entity(cabBookingService.fetchAllAvailableCabs())
+				.type(MediaType.APPLICATION_JSON).build();
 	}
 
 }

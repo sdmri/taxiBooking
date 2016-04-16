@@ -7,7 +7,7 @@
 	<version>1.0</version>
 	
 	<properties>
-		<jersey-version>1.8</jersey-version>
+		<jersey-version>1.17.1</jersey-version>
 		<spring-version>3.0.5.RELEASE</spring-version>
 	</properties>
 
@@ -90,6 +90,18 @@
 					<artifactId>spring-context</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>${jersey-version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>com.owlike</groupId>
+			<artifactId>genson</artifactId>
+			<version>0.99</version>
 		</dependency>
 		
 		<!-- JUnit test utils-->
