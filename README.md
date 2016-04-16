@@ -1,4 +1,4 @@
-# taxiBooking
+# Fuber Cab Booking
 
 A RESTful API that forms the backend system for managing an on demand cab service. Finding available cabs, booking the nearest, billing and managing inventory are some of the features.
 
