@@ -133,9 +133,6 @@
 					<includes>
 						<include>**/*Test*.java</include>
 					</includes>
-					<additionalClasspathElements>
-						<additionalClasspathElement>src/test/resources</additionalClasspathElement>
-					</additionalClasspathElements>
 				</configuration>
 			</plugin>
 			<plugin>
