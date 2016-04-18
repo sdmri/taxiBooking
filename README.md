@@ -12,6 +12,17 @@ Any cab can be assigned if no specifications are given at the time of booking
 
 Start and End points are co-ordinates in 2D space in second quadrant (x - latitude ; y - longitude) 
 
+Build and deploy :-
+--------------------
+>Uses maven 3.0. Built on Java 7.0
+>
+>mvn clean install
+>
+>   or
+>mvn package
+>
+>to create a war which can be deployed on any container
+
 APIs for Rider's request :-
 ----------------------------
 
